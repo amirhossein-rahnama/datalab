@@ -1,0 +1,87 @@
+# datalab stacks.yaml — declarative task-type -> package set + one-line recipe.
+#
+# Single source of truth for the `scaffold` skill: base packages are always
+# installed, task packages are added for the chosen task type, and tier
+# packages are added for the chosen tier (+ml / +dl / +mlops). Adding a new
+# task type or tier is a config edit here — no code changes needed.
+
+base:
+  packages:
+    - pandas
+    - numpy
+    - matplotlib
+    - seaborn
+    - scikit-learn
+    - jupyter
+    - pytest
+    - ruff
+    - pyyaml
+
+tasks:
+  eda:
+    packages:
+      - ydata-profiling
+    recipe: "Load -> profile (dtypes, missingness, distributions, correlations) -> data dictionary -> written findings."
+
+  classification:
+    packages:
+      - xgboost
+    recipe: "Stratified train/test + CV, class-weighted baseline, ROC/PR curves + confusion matrix, beat a Dummy baseline."
+
+  regression:
+    packages:
+      - xgboost
+    recipe: "K-fold CV, residual analysis, MAE/RMSE/R2 vs. a mean-predictor baseline."
+
+  clustering:
+    packages:
+      - scikit-learn
+    recipe: "Scale features, sweep k (elbow + silhouette score), profile clusters, visualize with PCA/UMAP."
+
+  timeseries:
+    packages:
+      - statsmodels
+    recipe: "TimeSeriesSplit only (no shuffling), lag/rolling-window features, beat a naive/seasonal-naive baseline."
+
+  nlp:
+    packages:
+      - spacy
+      - transformers
+    recipe: "Clean/tokenize -> TF-IDF or embedding baseline -> transformer fine-tune only if the baseline isn't enough."
+
+  cv:
+    packages:
+      - torch
+      - torchvision
+      - pillow
+    recipe: "Data loaders + augmentation -> transfer-learning baseline -> fine-tune, tracking train/val curves for over/underfitting."
+
+  recommendation:
+    packages:
+      - scikit-surprise
+    recipe: "Split by user or time (never randomly across interactions), popularity baseline, precision@k/recall@k/NDCG."
+
+  genai_rag:
+    packages:
+      - langchain
+      - chromadb
+      - sentence-transformers
+      - ragas
+    recipe: "Loader -> chunk -> embed -> vector store -> retrieve -> generate; evaluate with ragas (faithfulness, answer relevance, context precision)."
+
+tiers:
+  ml:
+    packages:
+      - xgboost
+      - optuna
+      - mlflow
+  dl:
+    packages:
+      - torch
+  mlops:
+    packages:
+      - dvc
+      - mlflow
+      - fastapi
+      - uvicorn
+      - evidently

@@ -1,0 +1,15 @@
+# {{project}} — model/training hyperparameters, kept separate from config.yaml
+# so DVC / experiment tracking can version them independently.
+seed: 42
+
+model:
+  type: baseline # swap for xgboost / logistic_regression / etc.
+  params: {}
+
+cv:
+  n_splits: 5
+  shuffle: true
+
+tuning:
+  enabled: false
+  n_trials: 50 # used when Optuna tuning is enabled

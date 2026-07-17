@@ -1,0 +1,48 @@
+# {{project}} — DVC pipeline. Run: dvc repro
+stages:
+  load:
+    cmd: python pipeline.py --step load
+    deps:
+      - pipeline.py
+      - config.yaml
+    outs:
+      - data/raw
+
+  validate:
+    cmd: python pipeline.py --step validate
+    deps:
+      - pipeline.py
+      - data/raw
+      - schema.py
+
+  features:
+    cmd: python pipeline.py --step features
+    deps:
+      - pipeline.py
+      - data/raw
+    outs:
+      - data/processed
+
+  train:
+    cmd: python pipeline.py --step train
+    deps:
+      - pipeline.py
+      - data/processed
+      - params.yaml
+    params:
+      - seed
+    outs:
+      - models/pipeline.joblib
+    metrics:
+      - reports/metrics.json:
+          cache: false
+
+  evaluate:
+    cmd: python pipeline.py --step evaluate
+    deps:
+      - pipeline.py
+      - models/pipeline.joblib
+      - data/processed
+    metrics:
+      - reports/eval.json:
+          cache: false

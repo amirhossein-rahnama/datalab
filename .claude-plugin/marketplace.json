@@ -1,0 +1,11 @@
+{
+  "name": "datalab-marketplace",
+  "owner": { "name": "Amir" },
+  "plugins": [
+    {
+      "name": "datalab",
+      "source": "./",
+      "description": "Data science project builder for Claude Code — scaffold, run, verify, and document any DS project."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+# {{project}} — base configuration. Loaded by src/{{pkg}}/config.py.
+# This is the single source of truth for the fixed seed and data paths.
+seed: 42
+
+paths:
+  data_raw: data/raw
+  data_interim: data/interim
+  data_processed: data/processed
+  data_external: data/external
+  models: models
+  reports: reports
+  figures: reports/figures
+
+data:
+  target_column: null # set this once you know your target

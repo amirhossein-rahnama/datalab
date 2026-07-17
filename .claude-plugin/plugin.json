@@ -1,0 +1,18 @@
+{
+  "name": "datalab",
+  "description": "Build, run, and complete any data science project — academic or industrial. Scaffolding, EDA, leakage-safe modeling, full experiment runs, quality verification (over/underfitting, leakage, fairness), and PDF/PPTX/dashboard deliverables.",
+  "version": "0.1.0",
+  "author": { "name": "Amir" },
+  "license": "MIT",
+  "keywords": ["data-science", "machine-learning", "mlops", "eda", "scaffolding", "claude-code"],
+  "skills": [
+    "./skills/orchestrator/",
+    "./skills/scaffold/",
+    "./skills/eda/",
+    "./skills/modeling/",
+    "./skills/experiment/",
+    "./skills/verify/",
+    "./skills/mlops/",
+    "./skills/document/"
+  ]
+}

@@ -1,0 +1,22 @@
+# datalab project config — iris-classification worked example
+seed: 42
+task_type: classification
+target: species
+
+data:
+  path: data/iris.csv
+  format: csv
+
+features:
+  - sepal_length
+  - sepal_width
+  - petal_length
+  - petal_width
+
+split:
+  test_size: 0.3
+  stratify: true
+
+project:
+  name: iris-classification
+  profile: academic
