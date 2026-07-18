@@ -1,4 +1,4 @@
-"""Smoke test — the package imports cleanly and SEED is configured."""
+"""Smoke test - the package imports cleanly and SEED is configured."""
 import sys
 from pathlib import Path
 

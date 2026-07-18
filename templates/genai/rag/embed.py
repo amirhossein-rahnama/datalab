@@ -1,4 +1,4 @@
-"""RAG pipeline — step 3: embed chunks.
+"""RAG pipeline - step 3: embed chunks.
 
 sentence-transformers is imported lazily so this module doesn't hard-fail
 until the +genai tier's dependencies are installed.

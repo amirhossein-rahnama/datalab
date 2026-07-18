@@ -1,0 +1,25 @@
+# datalab optional dependencies — heavy, feature-gated packages. Nothing here is required
+# for datalab's core scripts (scaffolding, EDA, modeling, verification, PDF/PPTX docs — see
+# scripts/requirements.txt). Install the whole group with: python scripts/setup.py --full
+# (or by hand: pip install -r scripts/requirements-optional.txt)
+
+# Explainability (datalab verify -> SHAP)
+shap>=0.44
+
+# Data validation (ML tier schema)
+pandera>=0.18
+
+# Hyperparameter tuning (modeling)
+optuna>=3.5
+
+# Drift monitoring (MLOps tier)
+evidently>=0.4
+
+# Dependency security scan
+pip-audit>=2.7
+
+# MLOps serving/tracking
+dvc>=3.0
+mlflow>=2.10
+fastapi>=0.110
+uvicorn>=0.27

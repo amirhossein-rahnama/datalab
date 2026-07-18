@@ -1,12 +1,11 @@
+# datalab core dependencies — required for scaffolding, EDA, modeling, verification,
+# and PDF/PPTX documentation. Installed automatically by: python scripts/setup.py
 reportlab>=4.0
 python-pptx>=0.6.23
 pandas>=2.0
+numpy>=1.26
 scikit-learn>=1.3
+matplotlib>=3.7
 pyyaml>=6.0
 nbformat>=5.9
 nbclient>=0.9
-shap>=0.44
-pandera>=0.18
-evidently>=0.4
-optuna>=3.5
-pip-audit>=2.7

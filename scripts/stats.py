@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Lightweight statistics for reporting model results: confidence intervals, effect size,
-and mean/std summaries. numpy + stdlib only — scipy is intentionally NOT required.
+and mean/std summaries. numpy + stdlib only - scipy is intentionally NOT required.
 """
 from __future__ import annotations
 

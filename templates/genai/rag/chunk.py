@@ -1,4 +1,4 @@
-"""RAG pipeline — step 2: chunk documents into retrieval-sized passages."""
+"""RAG pipeline - step 2: chunk documents into retrieval-sized passages."""
 from __future__ import annotations
 
 import argparse

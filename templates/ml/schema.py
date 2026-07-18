@@ -1,6 +1,6 @@
 """Data schema contract for {{project}}, enforced with pandera.
 
-`pandera` is imported lazily so this module — and anything that imports it —
+`pandera` is imported lazily so this module - and anything that imports it -
 doesn't hard-fail for users who haven't installed the +ml tier's dependencies
 yet. Run this file directly to validate a CSV against the schema.
 """

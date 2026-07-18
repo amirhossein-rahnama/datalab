@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""datalab scaffold renderer — non-clobbering template -> project tree renderer.
+"""datalab scaffold renderer - non-clobbering template -> project tree renderer.
 
 Walks a template directory (e.g. templates/base), substitutes `{{key}}` tokens
 (from `context`, e.g. {{pkg}}, {{project}}, {{python}}) in both file CONTENTS and
@@ -53,7 +53,7 @@ def render(template_dir, dest_dir, context: dict, overwrite: bool = False) -> di
     `{{key}}` tokens from `context` are substituted in both file contents and
     path components (so a directory/file literally named `{{pkg}}` is renamed
     to the package name). Files are treated as UTF-8 text; if a file fails to
-    decode as UTF-8 it is copied byte-for-byte instead (binary-safe fallback) —
+    decode as UTF-8 it is copied byte-for-byte instead (binary-safe fallback) -
     path substitution still applies to binary files.
 
     Non-clobbering by default: if a destination file already exists and

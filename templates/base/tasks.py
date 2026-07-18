@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cross-platform task runner for {{project}} — no `make` required.
+"""Cross-platform task runner for {{project}} - no `make` required.
 
 Usage:
     python tasks.py setup    # pip install -r requirements.txt

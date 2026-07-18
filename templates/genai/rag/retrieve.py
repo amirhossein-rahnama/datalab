@@ -1,4 +1,4 @@
-"""RAG pipeline — step 5: retrieve the top-k relevant chunks for a query."""
+"""RAG pipeline - step 5: retrieve the top-k relevant chunks for a query."""
 from __future__ import annotations
 
 import argparse

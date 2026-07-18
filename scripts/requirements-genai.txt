@@ -1,0 +1,10 @@
+# datalab GenAI/RAG dependencies — only needed for the genai_rag task type
+# (see templates/stacks.yaml and templates/genai/). Not installed by default and not
+# required for any other task type or tier.
+# Install with: python scripts/setup.py --genai
+# (or by hand: pip install -r scripts/requirements-genai.txt)
+
+langchain>=0.1
+chromadb>=0.4
+sentence-transformers>=2.5
+ragas>=0.1

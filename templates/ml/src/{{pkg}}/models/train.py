@@ -1,7 +1,7 @@
-"""Model training for {{project}} — leakage-safe sklearn Pipeline skeleton.
+"""Model training for {{project}} - leakage-safe sklearn Pipeline skeleton.
 
 All preprocessing (imputation, scaling, encoding) lives INSIDE the Pipeline so
-it is fit only on training folds during cross-validation — never on the full
+it is fit only on training folds during cross-validation - never on the full
 dataset before splitting. Swap the DummyClassifier for a real estimator once
 you have features; check Context7 for current sklearn API before extending.
 """
@@ -55,7 +55,7 @@ def train(X, y, estimator=None):
     """Fit + cross-validate. Replace `estimator` with a real model before use.
 
     Defaults to a DummyClassifier so this skeleton runs end-to-end out of the
-    box — every real model must beat this baseline (see verify skill).
+    box - every real model must beat this baseline (see verify skill).
     """
     if estimator is None:
         estimator = DummyClassifier(strategy="stratified", random_state=SEED)
@@ -70,4 +70,4 @@ def train(X, y, estimator=None):
 
 
 if __name__ == "__main__":
-    print("[train] TODO: load data and call train(X, y, estimator) — this is a skeleton.")
+    print("[train] TODO: load data and call train(X, y, estimator) - this is a skeleton.")

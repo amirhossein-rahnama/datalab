@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Lightweight PII scanner: flags columns by name keyword and by regex on sampled values.
 
-Heuristic only — designed to catch obvious PII (emails, phone numbers, and common
+Heuristic only - designed to catch obvious PII (emails, phone numbers, and common
 name-based hints like "ssn", "dob", "address") so a project can be warned before data
 with personal information is committed or shared.
 """

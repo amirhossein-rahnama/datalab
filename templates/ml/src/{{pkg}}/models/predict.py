@@ -1,4 +1,4 @@
-"""Inference for {{project}} — loads a fitted pipeline and predicts on new data.
+"""Inference for {{project}} - loads a fitted pipeline and predicts on new data.
 
 Keep this in sync with train.py: the same Pipeline (preprocessing + model)
 that was fit in training must be the one used here, so no transform step can

@@ -1,8 +1,8 @@
-"""RAG pipeline — step 4: vector store (Chroma by default).
+"""RAG pipeline - step 4: vector store (Chroma by default).
 
 chromadb is imported lazily so this module doesn't hard-fail until the
 +genai tier's dependencies are installed. Swap for FAISS if you prefer a
-purely local, dependency-light index — see the commented alternative below.
+purely local, dependency-light index - see the commented alternative below.
 """
 from __future__ import annotations
 

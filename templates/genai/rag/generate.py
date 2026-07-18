@@ -1,7 +1,7 @@
-"""RAG pipeline — step 6: generate an answer from retrieved context.
+"""RAG pipeline - step 6: generate an answer from retrieved context.
 
 Uses a lazy LLM call so this module doesn't hard-fail until credentials/deps
-are set up. Wire up your provider of choice — check Context7 for the current
+are set up. Wire up your provider of choice - check Context7 for the current
 SDK API before implementing the call.
 """
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""RAG pipeline — step 1: load source documents for {{project}}.
+"""RAG pipeline - step 1: load source documents for {{project}}.
 
 Reads raw documents (.txt/.md) from a directory and returns a list of
 plain-text documents with basic metadata, ready for rag/chunk.py. Extend

@@ -21,7 +21,7 @@ def _ragas():
 
 
 def evaluate_dataset(records: list[dict]):
-    """`records` need question/answer/contexts/ground_truth keys — see ragas docs via Context7."""
+    """`records` need question/answer/contexts/ground_truth keys - see ragas docs via Context7."""
     from datasets import Dataset
 
     evaluate, metrics = _ragas()

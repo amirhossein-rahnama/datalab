@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""{{project}} — end-to-end pipeline skeleton.
+"""{{project}} - end-to-end pipeline skeleton.
 
 Run the whole thing:  python pipeline.py
 Run one step only:    python pipeline.py --step train
 
-This is a STARTING POINT — each step below is a minimal working stub that
+This is a STARTING POINT - each step below is a minimal working stub that
 loads config and prints what it would do. Replace the body of each function
 with real logic as the project grows. Steps always read from `config.yaml`
 and use the fixed SEED so every run is reproducible.
