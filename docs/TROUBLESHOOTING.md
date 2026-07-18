@@ -28,7 +28,7 @@ Common problems, why they happen, and the exact fix. If you don't see your issue
 ```
 /datalab:setup
 ```
-This installs exactly the packages `datalab`'s tooling needs — `/datalab:doctor` also prints the literal `pip install ...` line it would take to fix things by hand, if you'd rather run that yourself. Re-run `/datalab:doctor` afterward to confirm everything shows `[OK]`.
+This installs exactly the **core** packages `datalab`'s tooling needs — `/datalab:doctor` also prints the literal `pip install ...` line it would take to fix things by hand, if you'd rather run that yourself. Re-run `/datalab:doctor` afterward to confirm everything shows `[OK]`. (If it's an **optional** package showing as missing under "Optional (feature-gated) packages" instead, that's expected, not a problem — see the next entry.)
 
 ## A feature says it needs a package that isn't installed
 
@@ -38,10 +38,10 @@ This installs exactly the packages `datalab`'s tooling needs — `/datalab:docto
 
 **Fix:**
 ```
-/datalab:setup --full     # SHAP, Optuna, pandera, Evidently, pip-audit
-/datalab:setup --genai    # embeddings / vector store / ragas, for genai-rag projects
+/datalab:setup --full     # SHAP, pandera, Optuna, Evidently, pip-audit, DVC, MLflow, FastAPI/uvicorn
+/datalab:setup --genai    # LangChain, ChromaDB, sentence-transformers, ragas — for genai-rag projects
 ```
-Both are safe to run any time — they only install what's missing.
+Both are safe to run any time — they only install what's missing, and one package failing never blocks the rest. `/datalab:doctor` also proactively lists every optional package's status and which feature it unlocks, so you don't have to guess which flag you need. Add `--dry-run` to either command to print the exact `pip install` line without installing anything — handy on a restricted network, or if you'd rather run it yourself.
 
 ## An optional library fails to install on a very new Python version
 

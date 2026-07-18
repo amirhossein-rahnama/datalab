@@ -25,7 +25,7 @@ The first two lines register and install the plugin itself (commands + skills �
 /datalab:doctor
 ```
 
-This prints a short health report: Python version, which packages are present, and whether the plugin itself is wired up correctly (its manifest file is readable). If anything's missing, it tells you exactly what to run to fix it — usually just re-running `/datalab:setup`. Full explanation of what each check means: [`docs/COMMANDS.md`](COMMANDS.md#datalabdoctor).
+This prints a short health report: Python version, whether the plugin itself is wired up correctly (its manifest file is readable), and which packages are present — core ones (required) and optional, feature-gated ones like SHAP or Optuna (informational only; missing is fine until a feature actually needs one). If a **core** package is missing, it tells you exactly what to run to fix it — usually just re-running `/datalab:setup`. Full explanation of what each check means: [`docs/COMMANDS.md`](COMMANDS.md#datalabdoctor).
 
 ## Step 3 — Start a new project
 

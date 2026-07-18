@@ -101,16 +101,68 @@ def render(template_dir, dest_dir, context: dict, overwrite: bool = False) -> di
     return {"written": written, "skipped": skipped}
 
 
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+
+
+def slugify_pkg(project: str) -> str:
+    """Derive an importable package name from a human-readable project name."""
+    slug = re.sub(r"[^0-9a-zA-Z]+", "_", project.strip().lower()).strip("_")
+    if not slug:
+        return "project"
+    if slug[0].isdigit():
+        slug = "p_" + slug
+    return slug
+
+
+def augment_requirements(dest_dir, task_type=None, tiers=(), stacks_path=None) -> list:
+    """Append task-type/tier packages from stacks.yaml to dest requirements.txt.
+
+    Deduplicates against packages already listed. No-op (returns []) if
+    requirements.txt is absent or stacks.yaml can't be read.
+    """
+    req = Path(dest_dir) / "requirements.txt"
+    if not req.exists():
+        return []
+    try:
+        stacks = load_stacks(str(stacks_path or (PLUGIN_ROOT / "templates" / "stacks.yaml")))
+    except Exception:
+        return []
+    wanted = list((stacks.get("tasks", {}).get(task_type) or {}).get("packages") or []) if task_type else []
+    for tier in tiers:
+        wanted += list((stacks.get("tiers", {}).get(tier) or {}).get("packages") or [])
+    existing_text = req.read_text(encoding="utf-8")
+    have = {
+        re.split(r"[<>=!~ ]", ln.strip())[0].lower()
+        for ln in existing_text.splitlines()
+        if ln.strip() and not ln.lstrip().startswith("#")
+    }
+    added = []
+    for pkg in wanted:
+        name = re.split(r"[<>=!~ ]", pkg)[0].lower()
+        if name and name not in have:
+            added.append(pkg)
+            have.add(name)
+    if added:
+        req.write_text(
+            existing_text.rstrip("\n") + "\n# task/tier packages\n" + "\n".join(added) + "\n",
+            encoding="utf-8",
+        )
+    return added
+
+
 def main(argv=None) -> int:
     argv = argv if argv is not None else sys.argv[1:]
     parser = argparse.ArgumentParser(
         description="Render a datalab template tree into a destination project directory."
     )
-    parser.add_argument("--template", required=True, help="Template directory, e.g. templates/base")
+    parser.add_argument("--template", help="Single template directory, e.g. templates/base (low-level mode)")
+    parser.add_argument("--tier", help="Comma-separated tiers rendered in order, e.g. base,ml (high-level mode)")
     parser.add_argument("--dest", required=True, help="Destination project directory")
-    parser.add_argument("--pkg", required=True, help="Importable Python package name, e.g. my_project")
+    parser.add_argument("--pkg", help="Importable package name (default: derived from --project)")
     parser.add_argument("--project", required=True, help="Human-readable project name")
     parser.add_argument("--python", default="3.11", help="Target Python version (default: 3.11)")
+    parser.add_argument("--task-type", dest="task_type", help="Task type; adds packages from stacks.yaml")
+    parser.add_argument("--manager", default="uv", help="Package manager label (default: uv)")
     parser.add_argument(
         "--overwrite",
         action="store_true",
@@ -118,18 +170,48 @@ def main(argv=None) -> int:
     )
     args = parser.parse_args(argv)
 
-    context = {"pkg": args.pkg, "project": args.project, "python": args.python}
-    result = render(args.template, args.dest, context, overwrite=args.overwrite)
+    if not args.template and not args.tier:
+        parser.error("one of --template or --tier is required")
 
-    print(f"[scaffold] {args.template} -> {args.dest}")
-    print(f"  written: {len(result['written'])}")
-    for path in result["written"]:
+    pkg = args.pkg or slugify_pkg(args.project)
+    context = {"pkg": pkg, "project": args.project, "python": args.python}
+
+    # Low-level mode: render a single template dir (output format unchanged).
+    if args.template:
+        result = render(args.template, args.dest, context, overwrite=args.overwrite)
+        print(f"[scaffold] {args.template} -> {args.dest}")
+        print(f"  written: {len(result['written'])}")
+        for path in result["written"]:
+            print(f"    + {path}")
+        if result["skipped"]:
+            print(f"  skipped (already exist): {len(result['skipped'])}")
+            for path in result["skipped"]:
+                print(f"    - {path}")
+        return 0
+
+    # High-level mode: render one or more tiers in order from the bundled templates.
+    tiers = [t.strip() for t in args.tier.split(",") if t.strip()]
+    written_total, skipped_total = [], []
+    for tier in tiers:
+        tdir = PLUGIN_ROOT / "templates" / tier
+        if not tdir.is_dir():
+            print(f"[scaffold] WARNING: unknown tier '{tier}' ({tdir} not found) - skipped")
+            continue
+        result = render(tdir, args.dest, context, overwrite=args.overwrite)
+        written_total += [f"{tier}/{p}" for p in result["written"]]
+        skipped_total += [f"{tier}/{p}" for p in result["skipped"]]
+    added = augment_requirements(args.dest, task_type=args.task_type, tiers=tiers)
+
+    print(f"[scaffold] tiers={','.join(tiers)} -> {args.dest} (pkg={pkg}, python={args.python}, manager={args.manager})")
+    print(f"  written: {len(written_total)}")
+    for path in written_total:
         print(f"    + {path}")
-    if result["skipped"]:
-        print(f"  skipped (already exist): {len(result['skipped'])}")
-        for path in result["skipped"]:
+    if skipped_total:
+        print(f"  skipped (already exist): {len(skipped_total)}")
+        for path in skipped_total:
             print(f"    - {path}")
-
+    if added:
+        print(f"  requirements.txt: +{len(added)} task/tier package(s): {', '.join(added)}")
     return 0
 
 

@@ -7,7 +7,7 @@ import json
 import sys
 from pathlib import Path
 
-REQUIRED_PACKAGES = ["reportlab", "pptx", "pandas", "numpy", "sklearn", "matplotlib", "yaml", "nbformat", "nbclient"]
+REQUIRED_PACKAGES = ["reportlab", "pptx", "pandas", "numpy", "sklearn", "matplotlib", "yaml", "nbformat", "nbclient", "ipykernel"]
 PIP_NAMES = {"pptx": "python-pptx", "sklearn": "scikit-learn", "yaml": "pyyaml"}
 MIN_PYTHON = (3, 10)
 

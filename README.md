@@ -181,9 +181,9 @@ There are two separate layers of dependencies, and `/datalab:setup` only ever to
 
 | Layer | For | Installed by |
 |---|---|---|
-| Core plugin tooling | doctor, scaffolding, EDA helpers, PDF/PPTX/notebook conversion, baseline modeling support | `/datalab:setup` (default, automatic) |
-| Optional heavy plugin tooling (SHAP, Optuna, pandera, Evidently, pip-audit) | explainability, hyperparameter tuning, schema validation, drift monitoring, dependency auditing | `/datalab:setup --full` |
-| GenAI/RAG plugin tooling | embeddings, vector store client, `ragas` evaluation | `/datalab:setup --genai` |
+| Core plugin tooling (`scripts/requirements.txt`) | doctor, scaffolding, EDA helpers, PDF/PPTX/notebook conversion, baseline modeling support | `/datalab:setup` (default, automatic) |
+| Optional heavy plugin tooling (`scripts/requirements-optional.txt`: SHAP, pandera, Optuna, Evidently, pip-audit, DVC, MLflow, FastAPI, uvicorn) | explainability, schema validation, hyperparameter tuning, drift monitoring, dependency auditing, MLOps serving/tracking | `/datalab:setup --full` |
+| GenAI/RAG plugin tooling (`scripts/requirements-genai.txt`: LangChain, ChromaDB, sentence-transformers, ragas) | embeddings, vector store client, RAG evaluation | `/datalab:setup --genai` |
 | **Your project's own dependencies** | whatever your scaffolded project's code needs (pandas, scikit-learn, XGBoost, PyTorch, ...) | rendered into *your* project's `requirements.txt` by `scaffold`; install with `python tasks.py setup` inside your project |
 
 You only ever install the optional plugin tooling if a feature you're using actually needs it — `datalab` tells you when that's the case, rather than front-loading every possible library on day one.
@@ -194,7 +194,7 @@ Most issues are a missing optional package or a stale Claude Code plugin cache �
 
 ## Contributing
 
-This plugin is under active development. The design lives in [`docs/specs/`](docs/specs/) and build plans in [`docs/plans/`](docs/plans/) — read those before proposing a structural change. The plugin has its own `pytest` suite under `tests/` (manifest validity, script behavior, scaffold rendering) that should stay green. The most sensitive contract in the codebase is **non-clobbering**: `scaffold` must never overwrite a file that already exists on disk — please preserve that in any change to `templates/` or `scripts/scaffold_render.py`. Issues and pull requests: [github.com/amirhossein-rahnama/datalab](https://github.com/amirhossein-rahnama/datalab).
+This plugin is under active development. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for dev setup, how to run the test suite, the repo layout, and coding conventions. The design lives in [`docs/specs/`](docs/specs/) and build plans in [`docs/plans/`](docs/plans/) — read those before proposing a structural change. The single most sensitive contract in the codebase is **non-clobbering**: `scaffold` must never overwrite a file that already exists on disk. Issues and pull requests: [github.com/amirhossein-rahnama/datalab](https://github.com/amirhossein-rahnama/datalab).
 
 ## Documentation
 

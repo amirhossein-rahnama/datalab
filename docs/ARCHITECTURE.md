@@ -186,12 +186,12 @@ Easy to conflate, worth keeping separate:
 
 | | Plugin tooling | Your project's dependencies |
 |---|---|---|
-| Lives in | `scripts/requirements.txt` | Rendered into *your* project's own `requirements.txt` from `templates/stacks.yaml` |
-| Examples | `reportlab`, `python-pptx`, `pandas`, `scikit-learn`, `pyyaml`, `nbformat`, `nbclient` (core) + `shap`, `pandera`, `evidently`, `optuna`, `pip-audit` (optional) | `pandas`, `numpy`, `scikit-learn`, plus whatever your task type/tier need (e.g. `xgboost`, `torch`, `dvc`, `fastapi`) |
-| Installed by | `/datalab:setup` (default = core; `--full` / `--genai` add the rest) | `python tasks.py setup` (plain `pip install -r requirements.txt`) run **inside your scaffolded project** |
+| Lives in | `scripts/requirements.txt` (core) + `scripts/requirements-optional.txt` (`--full`) + `scripts/requirements-genai.txt` (`--genai`) | Rendered into *your* project's own `requirements.txt` from `templates/stacks.yaml` |
+| Examples | Core: `reportlab`, `python-pptx`, `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `pyyaml`, `nbformat`, `nbclient`. Optional: `shap`, `pandera`, `optuna`, `evidently`, `pip-audit`, `dvc`, `mlflow`, `fastapi`, `uvicorn`. GenAI: `langchain`, `chromadb`, `sentence-transformers`, `ragas`. | `pandas`, `numpy`, `scikit-learn`, plus whatever your task type/tier need (e.g. `xgboost`, `torch`, `dvc`, `fastapi`) |
+| Installed by | `python scripts/setup.py` (i.e. `/datalab:setup`) — default = core only; `--full` / `--genai` add the rest; `--dry-run` previews the `pip` commands without installing | `python tasks.py setup` (plain `pip install -r requirements.txt`) run **inside your scaffolded project** |
 | Used by | The plugin's own scripts (doctor, report/deck generation, diagnostics, profiling, ...) | Your project's own code (`pipeline.py`, `src/<pkg>/`, notebooks) |
 
-`scripts/doctor.py`'s health check only verifies the **core** plugin-tooling packages (`reportlab`, `python-pptx`/`pptx`, `pandas`, `scikit-learn`/`sklearn`, `pyyaml`/`yaml`, `nbformat`, `nbclient`) — the heavier optional ones are intentionally not part of the baseline check, since not every project needs them.
+`scripts/doctor.py`'s **healthy/unhealthy** verdict depends only on the **core** packages (`reportlab`, `python-pptx`, `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `pyyaml`, `nbformat`, `nbclient`) plus a valid `plugin.json`. It also reports every **optional** package's presence informationally — each tagged with the feature it unlocks — so you always know exactly what `/datalab:setup --full` / `--genai` would add before you actually need it; a missing optional package never flips the verdict to unhealthy.
 
 ## Reproducibility & provenance
 
@@ -231,29 +231,34 @@ data-science-claude-plugin/
 │   ├── dashboard/                # app.py (Streamlit/Gradio stub)
 │   └── governance/                # MODEL_CARD.md, DATA_CARD.md, COMPLIANCE_CHECKLIST.md
 ├── scripts/
-│   ├── requirements.txt          # the plugin's own tooling dependencies
-│   ├── doctor.py                  # env + deps + plugin-wiring health check
-│   ├── profile_data.py             # profile + data dictionary + target/task guess
-│   ├── scaffold_render.py           # renders templates/ + stacks.yaml, non-clobbering
-│   ├── sample_data.py                # synthetic/sample dataset generation
-│   ├── diagnostics.py                 # over/underfit, CV, leakage, imbalance, baseline
-│   ├── explain.py                      # SHAP / importance / partial-dependence + fairness
-│   ├── plots.py                         # standardized publication-quality figures
-│   ├── stats.py                          # significance tests, CIs, effect sizes
-│   ├── provenance.py                      # writes the manifest: seeds, versions, hash, commit
-│   ├── privacy.py                          # PII scan of datasets
-│   ├── nb_to_md.py                          # notebook -> Markdown
-│   ├── generate_report.py                    # Markdown -> PDF (reportlab)
-│   └── generate_deck.py                       # outline -> PPTX (python-pptx)
+│   ├── requirements.txt          # core plugin-tooling dependencies (installed by default)
+│   ├── requirements-optional.txt # heavy, feature-gated deps — installed by --full
+│   ├── requirements-genai.txt    # GenAI/RAG deps — installed by --genai
+│   ├── setup.py                   # installs the dependency groups above (/datalab:setup)
+│   ├── doctor.py                   # env + core/optional deps + plugin-wiring health check
+│   ├── profile_data.py              # profile + data dictionary + target/task guess
+│   ├── scaffold_render.py            # renders templates/ + stacks.yaml, non-clobbering
+│   ├── sample_data.py                 # synthetic/sample dataset generation
+│   ├── diagnostics.py                  # over/underfit, CV, leakage, imbalance, baseline
+│   ├── explain.py                       # SHAP / importance / partial-dependence + fairness
+│   ├── plots.py                          # standardized publication-quality figures
+│   ├── stats.py                           # significance tests, CIs, effect sizes
+│   ├── provenance.py                       # writes the manifest: seeds, versions, hash, commit
+│   ├── privacy.py                           # PII scan of datasets
+│   ├── nb_to_md.py                           # notebook -> Markdown
+│   ├── generate_report.py                     # Markdown -> PDF (reportlab)
+│   └── generate_deck.py                        # outline -> PPTX (python-pptx)
 ├── examples/
-│   └── iris-classification/      # worked end-to-end project — demo AND test fixture
+│   ├── iris-classification/      # worked end-to-end project — demo AND test fixture
+│   └── sample-outputs/           # that project's real, already-rendered PDF/PPTX/figures
 ├── tests/                        # the plugin's own pytest suite (manifest, scripts, scaffold render)
+├── .github/                      # issue/PR templates + CI workflow (plugin-repo housekeeping)
 ├── docs/
 │   ├── specs/                    # design spec (locked)
 │   ├── plans/                    # build plans
 │   ├── GETTING_STARTED.md · COMMANDS.md · WORKFLOWS.md
 │   └── ARCHITECTURE.md · TROUBLESHOOTING.md · FAQ.md
-├── README.md · CHANGELOG.md · LICENSE
+├── README.md · CONTRIBUTING.md · CHANGELOG.md · LICENSE
 ```
 
 ## Testing strategy

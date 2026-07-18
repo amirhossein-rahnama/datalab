@@ -155,9 +155,10 @@ Right after installing, or any time something isn't behaving — it's always the
 Runs `scripts/doctor.py` and interprets the result:
 1. Confirms your Python version is 3.10 or newer.
 2. Checks that the plugin's own manifest (`.claude-plugin/plugin.json`) exists and is valid — if not, your install may be corrupted.
-3. Checks that the core packages `datalab`'s tooling needs are importable.
-4. If anything's missing, tells you the exact fix — normally, that just means running [`/datalab:setup`](#datalabsetup) (or, as a fallback, the literal `pip install ...` line the check prints).
-5. Summarizes: healthy, or the specific fixes needed.
+3. Checks that the **core** packages `datalab`'s tooling needs are importable — this is what determines the overall healthy/unhealthy verdict.
+4. Also reports, informationally, every **optional** feature-gated package (SHAP, pandera, Optuna, Evidently, pip-audit, DVC, MLflow, FastAPI, uvicorn) — present or not, each tagged with the feature it unlocks (explainability, data validation, hyperparameter tuning, drift monitoring, dependency scanning, MLOps). A missing optional package is never a failure, just information about what a given feature would need.
+5. If a **core** package is missing, tells you the exact fix — normally, that just means running [`/datalab:setup`](#datalabsetup) (or, as a fallback, the literal `pip install ...` line the check prints). If an **optional** one is missing, it points you at `/datalab:setup --full` or `--genai`.
+6. Summarizes: healthy, or the specific fixes needed.
 
 ### Example
 
@@ -185,11 +186,12 @@ Installs Python packages for the plugin's **own tooling** — not your project's
 
 | Invocation | Installs |
 |---|---|
-| `/datalab:setup` | **Core set** — just enough for scaffolding, doctor, EDA helpers, baseline modeling support, and PDF/PPTX/notebook generation. This is what most projects need, always. |
-| `/datalab:setup --full` | Core set **plus** the heavier, feature-specific libraries: SHAP (explainability), Optuna (hyperparameter tuning), pandera (schema validation), Evidently (drift monitoring), pip-audit (dependency vulnerability scanning). |
-| `/datalab:setup --genai` | Core set **plus** GenAI/RAG-specific libraries (embeddings, vector store client, `ragas` evaluation) — only needed if you're building a `genai-rag` project. |
+| `/datalab:setup` | **Core set** (`scripts/requirements.txt`) — just enough for scaffolding, doctor, EDA helpers, baseline modeling support, and PDF/PPTX/notebook generation. This is what most projects need, always. |
+| `/datalab:setup --full` | Core set **plus** `scripts/requirements-optional.txt`: SHAP (explainability), pandera (schema validation), Optuna (hyperparameter tuning), Evidently (drift monitoring), pip-audit (dependency vulnerability scanning), and DVC, MLflow, FastAPI, uvicorn (MLOps serving/tracking). |
+| `/datalab:setup --genai` | Core set **plus** `scripts/requirements-genai.txt` — GenAI/RAG-specific libraries (LangChain, ChromaDB, sentence-transformers, `ragas`) — only needed if you're building a `genai-rag` project. |
+| `/datalab:setup --full --genai` | Everything — both optional groups at once. |
 
-It's safe to re-run any time — it only installs what's missing. You don't need to guess which mode you need up front: `datalab` tells you (via `/datalab:doctor` or inline, when a skill hits a missing package) exactly when to re-run with `--full` or `--genai`.
+Add `--dry-run` to any of the above to print the exact `pip install` commands without installing anything — useful if you'd rather run them by hand, or you're on a restricted network. It's always safe to re-run `/datalab:setup` — it only installs what's missing, and one group failing (say, a GenAI library) never blocks the others from installing. You don't need to guess which mode you need up front: `datalab` tells you (via `/datalab:doctor` or inline, when a skill hits a missing package) exactly when to re-run with `--full` or `--genai`.
 
 ### Example
 
@@ -197,6 +199,7 @@ It's safe to re-run any time — it only installs what's missing. You don't need
 /datalab:setup
 /datalab:setup --full
 /datalab:setup --genai
+/datalab:setup --full --dry-run
 ```
 
 ### Output
@@ -215,7 +218,7 @@ Packages installed into your active Python environment. No project files are tou
 Any time you forget what's available, or want a quick refresher on where a project stands without digging through `.datalab/state.json` yourself.
 
 ### What happens
-Prints a summary of all seven commands and the eight skills behind them. If you run it inside a folder that has a `.datalab/state.json`, it also summarizes that project's current state — profile, task type, tier, and which phases are done/in-progress/pending — so you immediately know whether the next move is `/datalab:work`, `/datalab:run`, or `/datalab:docs`.
+Gives you a short, conversational overview — not a wall of text: what `datalab` is in one line; all seven commands, each with a one-line description; the typical workflow (`/datalab:setup → /datalab:new` (or `/datalab:work`) `→ /datalab:run → /datalab:docs`); a reminder that skills also auto-activate from plain English, without needing an explicit command; and where to go for more (the README for install steps and the full command reference, `docs/specs/` for the design spec, `docs/plans/` for build plans). If you name a specific command or topic, it focuses the overview on that instead of repeating everything.
 
 ### Example
 

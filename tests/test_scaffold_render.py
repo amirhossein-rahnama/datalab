@@ -114,3 +114,42 @@ def test_load_stacks_has_expected_structure():
     for tier in ["ml", "dl", "mlops"]:
         assert tier in stacks["tiers"], f"missing tier: {tier}"
         assert "packages" in stacks["tiers"][tier]
+
+
+def test_slugify_pkg_derives_importable_name():
+    assert scaffold_render.slugify_pkg("Breast Cancer") == "breast_cancer"
+    assert scaffold_render.slugify_pkg("My-Proj 2!") == "my_proj_2"
+    assert scaffold_render.slugify_pkg("123data").startswith("p_")
+    assert scaffold_render.slugify_pkg("   ") == "project"
+
+
+def test_main_tier_mode_renders_tiers_and_derives_pkg(tmp_path):
+    rc = scaffold_render.main([
+        "--tier", "base,ml",
+        "--task-type", "classification",
+        "--project", "My Proj",
+        "--dest", str(tmp_path),
+    ])
+    assert rc == 0
+    assert (tmp_path / "src" / "my_proj").is_dir()      # pkg derived from --project
+    assert (tmp_path / "params.yaml").exists()          # ml tier rendered
+    reqs = (tmp_path / "requirements.txt").read_text(encoding="utf-8")
+    assert "optuna" in reqs                             # ml-tier package appended
+
+
+def test_main_requires_template_or_tier(tmp_path):
+    import pytest
+
+    with pytest.raises(SystemExit):
+        scaffold_render.main(["--project", "X", "--dest", str(tmp_path)])
+
+
+def test_augment_requirements_dedupes(tmp_path):
+    req = tmp_path / "requirements.txt"
+    req.write_text("pandas>=2.0\noptuna>=3.0\n", encoding="utf-8")
+    added = scaffold_render.augment_requirements(
+        tmp_path, task_type=None, tiers=["ml"], stacks_path=STACKS_PATH
+    )
+    text = req.read_text(encoding="utf-8")
+    assert text.count("optuna") == 1   # already present -> not duplicated
+    assert added                       # at least one new ml-tier package added
