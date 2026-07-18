@@ -10,3 +10,6 @@ build/
 .DS_Store
 # generated test artifacts
 tests/_out/
+
+# local OMC tooling state (not part of the plugin)
+.omc/
