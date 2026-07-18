@@ -8,7 +8,8 @@ description: Use for exploratory data analysis — load, profile, clean, and vis
 > **Bundled scripts live in the plugin, not the user's project.** Invoke datalab's
 > Python scripts with the plugin path, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/<name>.py"`.
 > If `$CLAUDE_PLUGIN_ROOT` is unset, find the datalab plugin folder (the one containing
-> `.claude-plugin/plugin.json`). The working directory is the user's own project.
+> `.claude-plugin/plugin.json`). The working directory is the user's own project. If a bundled script errors because a package
+> is missing, run `python "$CLAUDE_PLUGIN_ROOT/scripts/setup.py"` once to install core deps.
 
 Fills `notebooks/01_eda.ipynb` with a real analysis of the project's dataset(s) and produces
 a data dictionary. Runs after `scaffold` (often auto-offered right after it) or on demand via

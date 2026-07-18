@@ -8,7 +8,8 @@ description: Use when creating a new data science project skeleton — renders t
 > **Bundled scripts live in the plugin, not the user's project.** Invoke datalab's
 > Python scripts with the plugin path, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/<name>.py"`.
 > If `$CLAUDE_PLUGIN_ROOT` is unset, find the datalab plugin folder (the one containing
-> `.claude-plugin/plugin.json`). The working directory is the user's own project.
+> `.claude-plugin/plugin.json`). The working directory is the user's own project. If a bundled script errors because a package
+> is missing, run `python "$CLAUDE_PLUGIN_ROOT/scripts/setup.py"` once to install core deps.
 
 Renders the tiered project skeleton from `templates/` for a new project, or adds a missing
 tier to an existing one (e.g., an existing project gains `+mlops` later). Called by

@@ -8,7 +8,8 @@ description: Use to run a full experiment end-to-end and produce accurate result
 > **Bundled scripts live in the plugin, not the user's project.** Invoke datalab's
 > Python scripts with the plugin path, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/<name>.py"`.
 > If `$CLAUDE_PLUGIN_ROOT` is unset, find the datalab plugin folder (the one containing
-> `.claude-plugin/plugin.json`). The working directory is the user's own project.
+> `.claude-plugin/plugin.json`). The working directory is the user's own project. If a bundled script errors because a package
+> is missing, run `python "$CLAUDE_PLUGIN_ROOT/scripts/setup.py"` once to install core deps.
 
 Runs the project's `pipeline.py` end-to-end for the record — this is what `/datalab:run`
 calls. Produces the numbers, figures, and written conclusions that `document` will later turn
