@@ -4,20 +4,25 @@ description: "Install datalab's Python dependencies (core by default; --full / -
 
 # datalab setup
 
+> **Bundled scripts live in the plugin, not the user's project.** Invoke datalab's
+> Python scripts with the plugin path, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/<name>.py"`.
+> If `$CLAUDE_PLUGIN_ROOT` is unset, find the datalab plugin folder (the one containing
+> `.claude-plugin/plugin.json`). The working directory is the user's own project.
+
 Install datalab's Python dependencies for the user so they never have to type `pip` themselves.
 
 ## Steps
 
 1. Locate the plugin root (the directory containing `.claude-plugin/plugin.json`).
-2. Run: `python scripts/setup.py` from the plugin root. This installs only the CORE
+2. Run: `python "$CLAUDE_PLUGIN_ROOT/scripts/setup.py"`. This installs only the CORE
    dependencies needed for scaffolding, EDA, modeling, verification, and PDF/PPTX docs
    (`scripts/requirements.txt`) — enough to start any project with near-zero setup.
 3. If the user's goal touches explainability, data validation, hyperparameter tuning, drift
    monitoring, dependency scanning, or MLOps serving/tracking (SHAP, pandera, Optuna,
    Evidently, pip-audit, DVC, MLflow, FastAPI/uvicorn), re-run with
-   `python scripts/setup.py --full` to also install `scripts/requirements-optional.txt`.
+   `python "$CLAUDE_PLUGIN_ROOT/scripts/setup.py" --full` to also install `scripts/requirements-optional.txt`.
 4. If the user's goal is the GenAI/RAG task type (LangChain, ChromaDB, sentence-transformers,
-   ragas), re-run with `python scripts/setup.py --genai` to also install
+   ragas), re-run with `python "$CLAUDE_PLUGIN_ROOT/scripts/setup.py" --genai` to also install
    `scripts/requirements-genai.txt`. Combine both with `--full --genai` to install everything.
 5. Read the command's output and report back to the user:
    - which dependency group(s) installed successfully

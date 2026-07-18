@@ -5,6 +5,11 @@ description: Use to verify generated work and model quality — smoke tests (imp
 
 # Verify
 
+> **Bundled scripts live in the plugin, not the user's project.** Invoke datalab's
+> Python scripts with the plugin path, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/<name>.py"`.
+> If `$CLAUDE_PLUGIN_ROOT` is unset, find the datalab plugin folder (the one containing
+> `.claude-plugin/plugin.json`). The working directory is the user's own project.
+
 The gate every other phase skill calls before it's allowed to report success. **Read-mostly**:
 verify reports pass/fail with concrete, actionable findings — it does not edit the owning
 skill's files itself. The calling skill applies fixes and re-invokes verify. Never let a red
@@ -32,8 +37,8 @@ instead of looping indefinitely.
 
 Run:
 ```
-python scripts/diagnostics.py ...
-python scripts/explain.py ...
+python "$CLAUDE_PLUGIN_ROOT/scripts/diagnostics.py" ...
+python "$CLAUDE_PLUGIN_ROOT/scripts/explain.py" ...
 ```
 Checks (full rubric and heuristics: `references/model-quality.md`):
 

@@ -5,6 +5,11 @@ description: Use when creating a new data science project skeleton — renders t
 
 # Scaffold
 
+> **Bundled scripts live in the plugin, not the user's project.** Invoke datalab's
+> Python scripts with the plugin path, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/<name>.py"`.
+> If `$CLAUDE_PLUGIN_ROOT` is unset, find the datalab plugin folder (the one containing
+> `.claude-plugin/plugin.json`). The working directory is the user's own project.
+
 Renders the tiered project skeleton from `templates/` for a new project, or adds a missing
 tier to an existing one (e.g., an existing project gains `+mlops` later). Called by
 `orchestrator` after the interview; never invoked directly on free-text without a decided
@@ -20,7 +25,7 @@ guess a profile or task type yourself.
 ## Step 2 — Render templates
 
 ```
-python scripts/scaffold_render.py --tier base,ml --task-type classification \
+python "$CLAUDE_PLUGIN_ROOT/scripts/scaffold_render.py" --tier base,ml --task-type classification \
     --project <name> --python 3.11 --manager uv --dest .
 ```
 (Check `--help` if flags differ.) This reads `templates/stacks.yaml` — the single source of

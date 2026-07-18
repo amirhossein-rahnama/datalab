@@ -5,6 +5,11 @@ description: Use for exploratory data analysis — load, profile, clean, and vis
 
 # EDA
 
+> **Bundled scripts live in the plugin, not the user's project.** Invoke datalab's
+> Python scripts with the plugin path, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/<name>.py"`.
+> If `$CLAUDE_PLUGIN_ROOT` is unset, find the datalab plugin folder (the one containing
+> `.claude-plugin/plugin.json`). The working directory is the user's own project.
+
 Fills `notebooks/01_eda.ipynb` with a real analysis of the project's dataset(s) and produces
 a data dictionary. Runs after `scaffold` (often auto-offered right after it) or on demand via
 `/datalab:work` when `phases.eda` is `pending`.
@@ -13,7 +18,7 @@ a data dictionary. Runs after `scaffold` (often auto-offered right after it) or 
 
 Find the dataset under `data/raw/` (or wherever the interview pointed). Run:
 ```
-python scripts/profile_data.py --input data/raw/<file>
+python "$CLAUDE_PLUGIN_ROOT/scripts/profile_data.py" --input data/raw/<file>
 ```
 Use its output (shape, per-column dtype/missingness/cardinality, target guess, task-type
 guess) as the backbone of the notebook — don't re-derive these by hand in pandas when the

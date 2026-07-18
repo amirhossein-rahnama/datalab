@@ -5,6 +5,11 @@ description: Use to generate deliverables — documentation, a PDF report (acade
 
 # Document
 
+> **Bundled scripts live in the plugin, not the user's project.** Invoke datalab's
+> Python scripts with the plugin path, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/<name>.py"`.
+> If `$CLAUDE_PLUGIN_ROOT` is unset, find the datalab plugin folder (the one containing
+> `.claude-plugin/plugin.json`). The working directory is the user's own project.
+
 Turns everything the project has produced into deliverables: a PDF report, a PPTX deck, and a
 governance bundle (model card + data card + compliance checklist). Runs after `experiment`
 (needs real results) — via `/datalab:docs`. The only skill that runs the deliverable-
@@ -14,7 +19,7 @@ generation scripts (`generate_report.py`, `generate_deck.py`).
 
 Don't invent content — pull from what other phases already produced:
 - `README.md` (project description)
-- Notebook output via `python scripts/nb_to_md.py --input notebooks/01_eda.ipynb` (repeat per
+- Notebook output via `python "$CLAUDE_PLUGIN_ROOT/scripts/nb_to_md.py" --input notebooks/01_eda.ipynb` (repeat per
   notebook that has relevant output)
 - `reports/results.md` (metrics, conclusions — from `experiment`)
 - `reports/figures/*` (from `experiment`/`eda`)
@@ -41,8 +46,8 @@ reviewable artifact on its own, not just an intermediate buffer.
 ## Step 3 — Render PDF and deck
 
 ```
-python scripts/generate_report.py --input reports/report.md --output reports/report.pdf --title "<project>"
-python scripts/generate_deck.py --input reports/deck_outline.md --output reports/deck.pptx --title "<project>"
+python "$CLAUDE_PLUGIN_ROOT/scripts/generate_report.py" --input reports/report.md --output reports/report.pdf --title "<project>"
+python "$CLAUDE_PLUGIN_ROOT/scripts/generate_deck.py" --input reports/deck_outline.md --output reports/deck.pptx --title "<project>"
 ```
 The deck outline is a condensed version of the report (one `# slide title` + `- bullet` per
 section per `generate_deck.py`'s outline format) — 6–12 slides, not a slide-per-paragraph

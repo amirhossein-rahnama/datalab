@@ -5,6 +5,11 @@ description: Use when starting, continuing, or planning any data science project
 
 # Orchestrator
 
+> **Bundled scripts live in the plugin, not the user's project.** Invoke datalab's
+> Python scripts with the plugin path, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/<name>.py"`.
+> If `$CLAUDE_PLUGIN_ROOT` is unset, find the datalab plugin folder (the one containing
+> `.claude-plugin/plugin.json`). The working directory is the user's own project.
+
 Entry point for `/datalab:new` and `/datalab:work`, and for any free-text request to start,
 continue, or plan a data science project. The orchestrator **never writes project code or
 notebooks itself** — it detects state, interviews the user, decides scope, and delegates to
@@ -35,7 +40,7 @@ not a restart. If a phase is `"in_progress"`, resume it in place.
 
 If any dataset is present (`data/raw/*`, or a path the user names), run:
 ```
-python scripts/profile_data.py --input <path>
+python "$CLAUDE_PLUGIN_ROOT/scripts/profile_data.py" --input <path>
 ```
 It prints JSON profiling the data and *proposing* a target column and task type — treat both
 as defaults for the interview, never as final answers. If the script's flags differ from

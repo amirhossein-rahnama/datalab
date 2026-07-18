@@ -5,6 +5,11 @@ description: Use to run a full experiment end-to-end and produce accurate result
 
 # Experiment
 
+> **Bundled scripts live in the plugin, not the user's project.** Invoke datalab's
+> Python scripts with the plugin path, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/<name>.py"`.
+> If `$CLAUDE_PLUGIN_ROOT` is unset, find the datalab plugin folder (the one containing
+> `.claude-plugin/plugin.json`). The working directory is the user's own project.
+
 Runs the project's `pipeline.py` end-to-end for the record — this is what `/datalab:run`
 calls. Produces the numbers, figures, and written conclusions that `document` will later turn
 into a report/deck. Runs after `modeling` has a winning pipeline; re-runnable any time the
@@ -28,8 +33,8 @@ testing, and reporting format: `references/academic-rigor.md`.
 ## Step 3 — Diagnostics, explainability, fairness
 
 ```
-python scripts/diagnostics.py ...   # over/underfit, CV spread, leakage smells, imbalance, baseline compare
-python scripts/explain.py ...       # SHAP / importance / partial-dependence + subgroup fairness
+python "$CLAUDE_PLUGIN_ROOT/scripts/diagnostics.py" ...   # over/underfit, CV spread, leakage smells, imbalance, baseline compare
+python "$CLAUDE_PLUGIN_ROOT/scripts/explain.py" ...       # SHAP / importance / partial-dependence + subgroup fairness
 ```
 These produce the artifacts `verify`'s model-quality gate will check and that `document`
 will cite in the model card — generate them here as part of the run, don't wait for `verify`
@@ -38,7 +43,7 @@ to ask for them.
 ## Step 4 — Figures
 
 ```
-python scripts/plots.py ...
+python "$CLAUDE_PLUGIN_ROOT/scripts/plots.py" ...
 ```
 Task-appropriate figure set (confusion matrix, ROC/PR, residuals, learning curves, feature
 importance, SHAP summary, cluster/forecast plots — see `references/plots.md`), saved to
@@ -47,7 +52,7 @@ importance, SHAP summary, cluster/forecast plots — see `references/plots.md`),
 ## Step 5 — Stats (academic emphasis, useful either way)
 
 ```
-python scripts/stats.py ...
+python "$CLAUDE_PLUGIN_ROOT/scripts/stats.py" ...
 ```
 Significance tests when comparing models (paired across CV folds/seeds — e.g., a paired
 t-test or Wilcoxon signed-rank, not an unpaired test), confidence intervals on headline
@@ -64,7 +69,7 @@ actual run output in Steps 1–5 — never fabricate, extrapolate, or "round to 
 ## Step 7 — Provenance
 
 ```
-python scripts/provenance.py
+python "$CLAUDE_PLUGIN_ROOT/scripts/provenance.py"
 ```
 Record seeds (all of them, for multi-seed runs), library versions, data hash, and git commit
 for this result. Append, don't overwrite — a project can have multiple recorded experiments.
