@@ -16,6 +16,22 @@ notebooks itself** — it detects state, interviews the user, decides scope, and
 the phase skill that owns the work (`scaffold`, `eda`, `modeling`, `experiment`, `mlops`,
 `document`), each of which hands off to `verify` before reporting success.
 
+## Step 0 — Ensure datalab's dependencies (one-time, automatic)
+
+The user should never have to run `/datalab:setup` by hand. Before Step 1, check the
+environment and self-heal if needed:
+```
+python "$CLAUDE_PLUGIN_ROOT/scripts/doctor.py"
+```
+If any **core** package is missing (ignore the optional/feature-gated ones), install the core
+set once, then continue:
+```
+python "$CLAUDE_PLUGIN_ROOT/scripts/setup.py"
+```
+If doctor is already healthy, skip silently — never reinstall. Only the small core set is
+installed automatically; heavy/optional libraries stay on demand (offer `--full` / `--genai`
+later, only when a feature actually needs them).
+
 ## Step 1 — Detect new vs existing
 
 Check, in order:

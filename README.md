@@ -29,22 +29,35 @@ Doing a data science project *properly* — not just "make a notebook that runs"
 
 ## Install
 
-```
-/plugin marketplace add https://github.com/amirhossein-rahnama/datalab
-/plugin install datalab
-/datalab:setup
-```
-
-1. **`/plugin marketplace add ...`** — registers this repository as a plugin source.
-2. **`/plugin install datalab`** — installs the `datalab` plugin (commands + skills) into Claude Code.
-3. **`/datalab:setup`** — installs the small set of Python packages the plugin's own tooling needs (report generation, doctor, notebook helpers). **You never run `pip install` by hand** — `/datalab:setup` does it for you, and it only installs what's needed. Heavier, feature-specific libraries (SHAP, Optuna, Evidently, pandera, GenAI/RAG libraries) install on demand later — see [Requirements & dependencies](#requirements--dependencies).
-
-That's it — you're ready. Requires **Python 3.10+**; nothing else to install on your system (no LaTeX, no pandoc, no compiled toolchains).
-
-Sanity-check any time with:
+Two lines — and Python dependencies install **themselves** on first use:
 
 ```
-/datalab:doctor
+/plugin marketplace add amirhossein-rahnama/datalab
+/plugin install datalab@datalab-marketplace
+```
+
+1. **`/plugin marketplace add <owner/repo>`** — Claude Code fetches this repo into its own plugin cache. You never run `git`, never clone, never manage files.
+2. **`/plugin install datalab@datalab-marketplace`** — adds the `/datalab:*` commands and skills.
+
+The **first** time you run any datalab command, it auto-installs the small core Python set it needs — so you don't run `/datalab:setup` yourself (it's still there if you ever want to install deps explicitly, or add optional feature libraries with `/datalab:setup --full` / `--genai`).
+
+Requires **Python 3.10+**; nothing else on your system (no LaTeX, no pandoc, no compiled toolchains). Sanity-check any time with `/datalab:doctor`.
+
+### Zero-command install (teams / one-time config)
+
+Prefer to type **no** `/plugin` commands? Add this to your personal `~/.claude/settings.json`, or a project's `.claude/settings.json` to share it with your whole team — datalab then registers and enables itself automatically (on startup / when the project is trusted):
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "datalab-marketplace": {
+      "source": { "source": "github", "repo": "amirhossein-rahnama/datalab" }
+    }
+  },
+  "enabledPlugins": {
+    "datalab@datalab-marketplace": true
+  }
+}
 ```
 
 ## 60-second quickstart
