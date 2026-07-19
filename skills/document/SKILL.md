@@ -52,7 +52,9 @@ python "$CLAUDE_PLUGIN_ROOT/scripts/generate_deck.py" --input reports/deck_outli
 ```
 The deck outline is a condensed version of the report (one `# slide title` + `- bullet` per
 section per `generate_deck.py`'s outline format) — 6–12 slides, not a slide-per-paragraph
-dump of the full report. Write `reports/deck_outline.md` before rendering, same reviewability
+dump of the full report. The outline may also include a `| a | b |` table (→ a table slide)
+and `![alt](path)` figures (→ a figure slide, image resolved relative to the outline file), so
+the key metrics table and confusion-matrix/ROC figures land in the deck, not just the PDF. Write `reports/deck_outline.md` before rendering, same reviewability
 reasoning as Step 2.
 
 ## Step 4 — Governance bundle

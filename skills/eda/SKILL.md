@@ -40,10 +40,12 @@ behind; that's what `verify`'s notebook-execution check will catch anyway.
 
 ## Step 3 — Visualize
 
-Use `scripts/plots.py` for standardized figures (distribution plots, correlation heatmap,
-class-balance bar, missingness matrix) saved to `reports/figures/`. Consult the `dataviz`
-skill for palette/layout guidance if you're building any ad-hoc chart in the notebook that
-`plots.py` doesn't cover.
+For EDA-specific figures (distributions, correlation heatmap, class-balance bar, missingness
+matrix), use pandas/matplotlib/seaborn directly in the notebook and save to `reports/figures/`;
+consult the `dataviz` skill for palette/layout. The bundled `plots.py` is a helper **library**
+(not a CLI) for the standard *modeling* figures — confusion matrix, ROC, residuals, learning
+curve — imported later by `modeling`/`experiment`
+(`sys.path` shim → `from plots import plot_confusion_matrix, ...`).
 
 ## Step 4 — Data dictionary
 

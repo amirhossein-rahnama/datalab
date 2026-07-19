@@ -4,6 +4,7 @@ tests when a project has no data of its own yet.
 """
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 import pandas as pd
@@ -46,3 +47,24 @@ def make_sample_regression(path, n_samples: int = 200, n_features: int = 5, rand
         random_state=random_state,
     )
     return _write_csv(X, y, path)
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(
+        description="Generate a synthetic sample dataset (CSV with a 'target' column)"
+    )
+    ap.add_argument("--task-type", dest="task_type", default="classification",
+                    choices=["classification", "regression"])
+    ap.add_argument("--output", required=True, help="CSV path to write")
+    ap.add_argument("--n-samples", dest="n_samples", type=int, default=200)
+    ap.add_argument("--n-features", dest="n_features", type=int, default=5)
+    ap.add_argument("--seed", type=int, default=42)
+    args = ap.parse_args(argv)
+    generator = make_sample_regression if args.task_type == "regression" else make_sample_classification
+    out = generator(args.output, n_samples=args.n_samples, n_features=args.n_features, random_state=args.seed)
+    print(f"[sample_data] wrote {args.task_type} dataset ({args.n_samples} rows) -> {out}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -33,9 +33,12 @@ testing, and reporting format: `references/academic-rigor.md`.
 
 ## Step 3 — Diagnostics, explainability, fairness
 
-```
-python "$CLAUDE_PLUGIN_ROOT/scripts/diagnostics.py" ...   # over/underfit, CV spread, leakage smells, imbalance, baseline compare
-python "$CLAUDE_PLUGIN_ROOT/scripts/explain.py" ...       # SHAP / importance / partial-dependence + subgroup fairness
+`diagnostics.py` / `explain.py` are helper **libraries** — import and call them on your model:
+```python
+import os, sys
+sys.path.insert(0, os.path.join(os.environ.get("CLAUDE_PLUGIN_ROOT", ""), "scripts"))
+from diagnostics import classify_fit, cross_validate_summary, baseline_comparison  # over/underfit, CV, baseline
+from explain import feature_importance, shap_summary, subgroup_performance          # importance/SHAP + fairness
 ```
 These produce the artifacts `verify`'s model-quality gate will check and that `document`
 will cite in the model card — generate them here as part of the run, don't wait for `verify`
@@ -43,8 +46,9 @@ to ask for them.
 
 ## Step 4 — Figures
 
-```
-python "$CLAUDE_PLUGIN_ROOT/scripts/plots.py" ...
+```python
+# same sys.path shim as Step 3; each function saves a PNG and returns its path
+from plots import plot_confusion_matrix, plot_roc, plot_residuals, plot_learning_curve
 ```
 Task-appropriate figure set (confusion matrix, ROC/PR, residuals, learning curves, feature
 importance, SHAP summary, cluster/forecast plots — see `references/plots.md`), saved to
@@ -52,8 +56,9 @@ importance, SHAP summary, cluster/forecast plots — see `references/plots.md`),
 
 ## Step 5 — Stats (academic emphasis, useful either way)
 
-```
-python "$CLAUDE_PLUGIN_ROOT/scripts/stats.py" ...
+```python
+# same sys.path shim as Step 3
+from stats import confidence_interval, cohens_d, mean_std
 ```
 Significance tests when comparing models (paired across CV folds/seeds — e.g., a paired
 t-test or Wilcoxon signed-rank, not an unpaired test), confidence intervals on headline

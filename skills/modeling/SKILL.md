@@ -55,8 +55,10 @@ beats baseline — tuning a leaky pipeline just overfits harder.
 
 Log every run under `experiments/` (params, metrics, seed, timestamp; if the `+mlops` tier is
 present, also log to MLflow — see `skills/mlops/references/repro.md`). Persist the winning
-pipeline (joblib) under `src/<pkg>/models/` or `models/`, including the full preprocessing —
-loading it later must not require re-fitting anything on new data.
+pipeline with `joblib.dump` to **`models/pipeline.joblib`** (project root) — the exact path
+`src/<pkg>/models/predict.py` and the Streamlit dashboard load. Include the full preprocessing
+so loading it later requires no re-fitting. (`templates/ml/.../train.py`'s `save_pipeline()`
+already writes this path.)
 
 ## Step 7 — Hand off to verify
 

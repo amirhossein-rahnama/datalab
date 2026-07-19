@@ -28,3 +28,13 @@ def test_make_sample_regression_writes_csv_with_continuous_target(tmp_path):
     assert len(df) == 30
     assert list(df.columns) == ["f0", "f1", "f2", "target"]
     assert df["target"].nunique() > 10
+
+def test_cli_writes_classification_csv(tmp_path):
+    out = tmp_path / "cli.csv"
+    rc = sample_data.main(
+        ["--task-type", "classification", "--output", str(out),
+         "--n-samples", "40", "--n-features", "3", "--seed", "1"]
+    )
+    assert rc == 0
+    df = pd.read_csv(out)
+    assert len(df) == 40 and "target" in df.columns

@@ -124,7 +124,7 @@ After `/datalab:run` has produced real results — this command never fabricates
 Loads the **`document`** skill:
 1. Gathers real sources only — your `README.md`, notebook output (converted via `nb_to_md.py`), `reports/results.md`, `reports/figures/*`, `reports/data_dictionary.md`, diagnostics/explainability output, and the provenance manifest.
 2. Assembles `reports/report.md` following the template for your project's profile — **academic** (abstract → intro → data → method → experiments → results → discussion → references/BibTeX) or **industrial** (executive summary → problem → data → approach → results → business impact → next steps).
-3. Renders `reports/report.pdf` and a condensed `reports/deck.pptx` (6–12 slides, not a slide-per-paragraph dump).
+3. Renders `reports/report.pdf` and a condensed `reports/deck.pptx` (6–12 slides, not a slide-per-paragraph dump). Both **embed your figures and render metrics tables** — the PDF and the deck each show the confusion-matrix/ROC figures and the results table, not just bullet text.
 4. Fills the **governance bundle** — model card, data card, compliance checklist — from real metrics, explainability, fairness, and provenance output.
 5. Optionally wires up a dashboard stub if you asked for one.
 6. Confirms every requested file exists and is non-empty before reporting done; if a script fails because of a missing dependency, it tells you the exact fix (or points at `/datalab:doctor`) rather than silently skipping a deliverable.

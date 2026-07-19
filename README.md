@@ -88,7 +88,7 @@ runs the full pipeline end-to-end: load → validate → preprocess (leakage-saf
 
 turns those results into a PDF report, a PPTX deck, and a model card + data card, all generated from your actual numbers.
 
-Want to see this exact flow already run for you, with no setup of your own data required? Jump to [`examples/iris-classification`](examples/iris-classification) — `cd` into it and run `/datalab:work`.
+Want to see this exact flow already run for you, with no setup of your own data required? The [`examples/`](examples/README.md) folder has **four** runnable projects — **classification** ([iris](examples/iris-classification)), **regression** ([diabetes](examples/diabetes-regression)), **time-series** ([sales forecasting](examples/sales-forecasting)), and **GenAI/RAG** ([knowledge base](examples/rag-knowledge-base)). `cd` into any one and run `/datalab:work`.
 
 ## Commands
 

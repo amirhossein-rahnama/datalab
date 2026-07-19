@@ -36,10 +36,13 @@ instead of looping indefinitely.
 
 ## Gate B — Model-quality gate (whenever a model was trained: `modeling`, `experiment`)
 
-Run:
-```
-python "$CLAUDE_PLUGIN_ROOT/scripts/diagnostics.py" ...
-python "$CLAUDE_PLUGIN_ROOT/scripts/explain.py" ...
+`diagnostics.py` and `explain.py` are helper **libraries** (not CLIs) — import them in a small
+verification script and call them on the in-memory model + arrays:
+```python
+import os, sys
+sys.path.insert(0, os.path.join(os.environ.get("CLAUDE_PLUGIN_ROOT", ""), "scripts"))
+from diagnostics import classify_fit, cross_validate_summary, baseline_comparison, detect_imbalance, error_analysis
+from explain import feature_importance, shap_summary, subgroup_performance
 ```
 Checks (full rubric and heuristics: `references/model-quality.md`):
 

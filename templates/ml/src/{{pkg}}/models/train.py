@@ -12,6 +12,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+import joblib
+
 from sklearn.compose import ColumnTransformer
 from sklearn.dummy import DummyClassifier
 from sklearn.impute import SimpleImputer
@@ -23,6 +25,9 @@ from {{pkg}}.config import SEED  # noqa: E402
 
 NUMERIC_FEATURES: list[str] = []  # TODO: fill in numeric column names
 CATEGORICAL_FEATURES: list[str] = []  # TODO: fill in categorical column names
+
+# Where the fitted pipeline is persisted (loaded by predict.py and the dashboard).
+MODEL_PATH = Path(__file__).resolve().parents[3] / "models" / "pipeline.joblib"
 
 
 def build_preprocessor() -> ColumnTransformer:
@@ -66,7 +71,16 @@ def train(X, y, estimator=None):
     print(f"[train] cv accuracy: {scores['test_score'].mean():.4f} +/- {scores['test_score'].std():.4f}")
 
     pipeline.fit(X, y)
+    save_pipeline(pipeline)
     return pipeline, scores
+
+
+def save_pipeline(pipeline, path: Path = MODEL_PATH) -> Path:
+    """Persist the fitted pipeline so predict.py and the dashboard can load it."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(pipeline, path)
+    print(f"[train] saved pipeline -> {path}")
+    return path
 
 
 if __name__ == "__main__":
