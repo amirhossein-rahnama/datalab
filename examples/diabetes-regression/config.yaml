@@ -1,0 +1,28 @@
+# datalab project config — diabetes-regression worked example
+seed: 42
+task_type: regression
+target: target
+
+data:
+  path: data/diabetes.csv
+  format: csv
+
+features:
+  - age
+  - sex
+  - bmi
+  - bp
+  - s1
+  - s2
+  - s3
+  - s4
+  - s5
+  - s6
+
+split:
+  test_size: 0.2
+  stratify: false
+
+project:
+  name: diabetes-regression
+  profile: academic

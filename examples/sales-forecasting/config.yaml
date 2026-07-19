@@ -1,0 +1,26 @@
+# datalab project config — sales-forecasting worked example
+seed: 42
+task_type: time-series
+target: sales
+date_column: date
+
+data:
+  path: data/sales.csv
+  format: csv
+
+# Engineered inside src/sales_ts/forecast.py — not raw columns in data/sales.csv.
+# lag_1 / lag_12 need the 12 rows before the series starts, which is why the first
+# 12 rows of the engineered frame are dropped before the split (see build_features()).
+features:
+  - lag_1     # sales one month prior — captures short-term momentum
+  - lag_12    # sales twelve months prior — captures the seasonal cycle
+  - month     # calendar month (1-12) — lets a linear model learn a seasonal offset
+
+split:
+  method: chronological   # last N months held out, in date order — never shuffled
+  test_size_months: 12
+  shuffle: false           # shuffling a time series leaks future values into training
+
+project:
+  name: sales-forecasting
+  profile: academic

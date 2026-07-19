@@ -1,0 +1,15 @@
+# datalab project config - rag-knowledge-base worked example
+seed: 42
+task_type: genai-rag
+
+corpus:
+  path: corpus/
+  format: md
+
+retrieval:
+  method: tfidf
+  top_k: 3
+
+project:
+  name: rag-knowledge-base
+  profile: industrial
