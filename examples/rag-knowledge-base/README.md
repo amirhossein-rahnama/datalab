@@ -19,8 +19,8 @@ differently here on purpose:
   `scripts/requirements.txt`), which is installed automatically.
 - **Generation** (`generate.py`) is a **clearly-marked stub**. Turning retrieved
   passages into a fluent, synthesized answer needs an LLM call, which needs an LLM
-  client library (e.g. `pip install anthropic`) and an API key
-  (`ANTHROPIC_API_KEY`) - neither of which this example installs or requires. Instead,
+  client library (e.g. `pip install openai`) and an API key
+  (e.g. `OPENAI_API_KEY`) - neither of which this example installs or requires. Instead,
   `answer()` returns:
   1. the exact **grounded prompt** a real LLM call would receive (system instructions +
      retrieved context + the question), so you can see what "grounded" means, and

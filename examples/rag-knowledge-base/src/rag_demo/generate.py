@@ -6,11 +6,11 @@ keys and zero heavy/optional dependencies.
 
 Real *generation* -- turning retrieved chunks into a fluent, synthesized answer --
 needs an LLM call. That needs:
-  1. An LLM client library, e.g. `pip install anthropic` (a separate, lightweight
+  1. An LLM client library, e.g. `pip install openai` (a separate, lightweight
      dependency -- NOT the same as datalab's `genai` tier deps in
      scripts/requirements-genai.txt, which cover embeddings/vector-store libraries
      for a *neural* retrieval path, not the generation call itself).
-  2. An API key: `export ANTHROPIC_API_KEY=...`.
+  2. An API key for your provider: `export OPENAI_API_KEY=...`.
 
 Neither is available in this example (core deps only, no network), so `answer()`
 below never calls out to a real model. Instead it returns an honest *extractive*
@@ -66,20 +66,18 @@ def answer(index: RagIndex, query: str, k: int = 3) -> dict:
     # ---------------------------------------------------------------------------
     # TODO: real generation.
     #
-    # Swap the extractive stub below for an actual Claude call once an LLM client
-    # is installed (`pip install anthropic`) and ANTHROPIC_API_KEY is set:
+    # Swap the extractive stub below for an actual LLM call once an LLM client
+    # is installed (e.g. `pip install openai`) and your API key is set:
     #
-    #   import anthropic
-    #   client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the env
-    #   response = client.messages.create(
-    #       model="claude-opus-4-8",
-    #       max_tokens=1024,
+    #   from openai import OpenAI
+    #   client = OpenAI()  # reads OPENAI_API_KEY from the env
+    #   response = client.chat.completions.create(
+    #       model="gpt-4o-mini",
     #       messages=[{"role": "user", "content": prompt}],
     #   )
-    #   real_answer = next(b.text for b in response.content if b.type == "text")
+    #   real_answer = response.choices[0].message.content
     #
-    # See https://docs.claude.com/en/api/messages for the current Messages API
-    # surface (model IDs, parameters) before wiring this up for real.
+    # Any LLM provider works -- see your provider's API docs for the exact call.
     # ---------------------------------------------------------------------------
     extractive_answer = hits[0]["text"] if hits else "No relevant context found in the corpus."
 
