@@ -23,3 +23,12 @@ dvc>=3.0
 mlflow>=2.10
 fastapi>=0.110
 uvicorn>=0.27
+
+# Stronger modeling bake-off (optional gradient booster)
+xgboost>=2.0
+
+# Big-data fast reads (scripts/bigdata.py -> read_fast)
+polars>=0.20
+
+# Deep learning (scripts/neural.py torch template; the sklearn-MLP baseline needs no extra deps)
+torch>=2.0

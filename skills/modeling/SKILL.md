@@ -32,11 +32,22 @@ checks for it. Full pattern and the common traps: `references/pipelines.md`.
 
 ## Step 3 — Pick a recipe for the task type
 
-`references/task-recipes.md` has the model families, default metric, and CV strategy per
-task type (classification/regression/clustering/time-series/NLP/computer-vision/
-recommendation/production-pipeline/GenAI-RAG). Start with 2–3 model families from the
-recipe, not one — the model-comparison leaderboard (`verify` gate B) expects more than a
-single candidate.
+`references/task-recipes.md` maps each task type (classification/regression/clustering/
+time-series/NLP/computer-vision/recommendation/production-pipeline/GenAI-RAG) to model
+families, default metric, CV strategy, **and the bundled helper to import**.
+
+For **classification/regression**, don't hand-pick 2–3 models — run the bundled bake-off,
+which CV-compares a curated set (LogReg, RandomForest, GradientBoosting, SVM, kNN, MLP, and
+XGBoost if installed), all leakage-safe, and returns a ranked leaderboard in one call:
+```python
+import os, sys
+sys.path.insert(0, os.path.join(os.environ.get("CLAUDE_PLUGIN_ROOT", ""), "scripts"))
+from model_zoo import bake_off, best_model, leaderboard_markdown
+results = bake_off(X, y, task="classification", cv=5)   # ranked best-first
+```
+For other task types, import that task's helper (clustering / anomaly / timeseries / nlp /
+vectorstore / bigdata / neural) — see the table in `references/task-recipes.md`. Still keep
+the Dummy baseline from Step 1 as the floor.
 
 ## Step 4 — Iterate
 
@@ -46,10 +57,15 @@ overwrite previous runs — append, so the leaderboard is real.
 
 ## Step 5 — Tune (optional, after a working baseline pipeline beats Dummy)
 
-Use Optuna to search the best-performing family's hyperparameters. Pattern, search-space
-guidance, pruning, and seed control: `references/tuning.md`. Save the winning config to
-`params.yaml`. Never tune before Steps 1–4 establish that the pipeline is leakage-safe and
-beats baseline — tuning a leaky pipeline just overfits harder.
+Tune the best family from the bake-off with the bundled Optuna helper (clear message + fix if
+`optuna` isn't installed — it's optional):
+```python
+from tune import tune, SUPPORTED   # same sys.path shim as Step 3
+best = tune("gradient_boosting", X, y, task="classification", n_trials=30)  # best_params/score/estimator
+```
+Deeper pattern, search-space guidance, pruning, and seed control: `references/tuning.md`. Save
+the winning config to `params.yaml`. Never tune before Steps 1–4 establish that the pipeline
+is leakage-safe and beats baseline — tuning a leaky pipeline just overfits harder.
 
 ## Step 6 — Track and persist
 

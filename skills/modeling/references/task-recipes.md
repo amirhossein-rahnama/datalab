@@ -22,3 +22,19 @@ adapt to data characteristics found in `eda` (e.g., swap accuracy for PR-AUC if 
 - Always include at least one **fast/simple** model in the comparison (linear/logistic,
   seasonal-naive, popularity baseline) even when you expect a boosted-tree/deep model to win —
   it's the leaderboard's second reference point after Dummy, and sometimes it *does* win.
+
+## Bundled helpers (import these — they are libraries, not CLIs)
+
+Add `$CLAUDE_PLUGIN_ROOT/scripts` to `sys.path`, then import the helper for your task. All are
+leakage-safe and run on core deps (heavy libs are lazy-imported / optional):
+
+| Task | Import | What it gives you |
+|---|---|---|
+| classification / regression | `from model_zoo import bake_off, best_model, leaderboard_markdown` · `from tune import tune` | ranked multi-model bake-off (LogReg→RF→GBM→SVM→kNN→MLP→XGBoost) + Optuna tuning |
+| clustering | `from clustering import auto_k, cluster_metrics, fit_kmeans` | pick k by silhouette; internal metrics (silhouette/DB/CH) |
+| anomaly detection | `from anomaly import detect_anomalies` | IsolationForest / LOF, with scores |
+| time-series | `from timeseries import chronological_split, seasonal_naive_forecast, moving_average_forecast, forecast_metrics` | no-leak split + baselines + MAE/RMSE/MAPE |
+| NLP (text) | `from nlp import train_text_classifier, predict_texts` | TF-IDF + linear baseline (CV) |
+| GenAI / RAG | `from vectorstore import VectorStore, build_store_from_texts, embed_texts` | cosine retrieval now; embeddings via the `--genai` extra |
+| big data | `from bigdata import count_rows, sample_csv, read_chunked, read_fast` | stratified sampling, chunked reads, polars fast-read |
+| deep learning | `from neural import mlp_baseline, torch_tabular_template` | sklearn-MLP baseline (no extra deps) + a PyTorch template for real DL |
